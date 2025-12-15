@@ -7,7 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "usuario", uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
 public class Usuario {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
+    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1)
     Integer id;
     @Column(nullable = false)
     @NotNull
@@ -38,6 +41,7 @@ public class Usuario {
     @Column(name = "password", nullable = false)
     @NotNull
     String password;
+    
     @Enumerated(EnumType.STRING)
     Role role;
 }

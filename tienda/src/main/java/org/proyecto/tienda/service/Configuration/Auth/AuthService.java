@@ -38,7 +38,7 @@ public class AuthService {
                 .apellidos(request.getApellidos())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.User)
+                .role(Role.USUARIO)
                 .build();
         usuarioRepo.save(usuario);
         return AuthResponse.builder().token(jwtService.getToken(usuario)).build();
