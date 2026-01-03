@@ -24,24 +24,22 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public @Nullable AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        Usuario usuario = usuarioRepo.findByEmail(request.getEmail()).orElseThrow();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        Usuario usuario = usuarioRepo.findByEmail(request.email()).orElseThrow();
         String jwtToken = jwtService.getToken(usuario);
-        return AuthResponse.builder()
-        .token(jwtToken)
-        .build();
+        return new AuthResponse(jwtToken);
     }
 
     public @Nullable AuthResponse register(RegisterRequest request) {
         Usuario usuario = Usuario.builder()
-                .nombres(request.getNombres())
-                .apellidos(request.getApellidos())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .nombres(request.nombres())
+                .apellidos(request.apellidos())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
                 .role(Role.USUARIO)
                 .build();
         usuarioRepo.save(usuario);
-        return AuthResponse.builder().token(jwtService.getToken(usuario)).build();
+        return new AuthResponse(jwtService.getToken(usuario));
     }
 
 }
